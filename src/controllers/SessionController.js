@@ -10,7 +10,7 @@ module.exports = {
         const user = await connection('user')
             .where('email', email)
             .andWhere('pwd', encryptPWD(pwd))
-            .select('id')
+            .select('id','name')
             .first();
 
         if (!user) {
