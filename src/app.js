@@ -5,13 +5,7 @@ const api = require('./api');
 
 const app = express();
 
-/* // PRODUÇÃO
-app.use(cors({
-  origin: 'http://meuapp.com'
-}));
-*/
-
-app.use(cors()); //DEV
+app.use(cors());
 app.use(express.json());
 app.use(api);
 app.use(errors());
