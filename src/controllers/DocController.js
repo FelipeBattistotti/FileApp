@@ -3,19 +3,30 @@ const copyPDF = require('../utils/copyPDF');
 
 module.exports = {
     async index(request, response) {
-        const { page = 1 } = request.query;
+        const { page } = request.query;
         const user_id = request.headers.authorization;
 
         const [count] = await connection('doc').where('doc.user_id', user_id).count();
 
-        const doc = await connection('doc')
-            .join('user', 'user.id', '=', 'doc.user_id')
-            .andWhere('doc.user_id', user_id)
-            .limit(5)
-            .offset((page - 1) * 5)
-            .select([
-                'doc.*'
-            ]);
+        let doc;
+
+        if (page === undefined) {
+            doc = await connection('doc')
+                .join('user', 'user.id', '=', 'doc.user_id')
+                .andWhere('doc.user_id', user_id)
+                .select([
+                    'doc.*'
+                ]);
+        } else {
+            doc = await connection('doc')
+                .join('user', 'user.id', '=', 'doc.user_id')
+                .andWhere('doc.user_id', user_id)
+                .limit(5)
+                .offset((page - 1) * 5)
+                .select([
+                    'doc.*'
+                ]);
+        }
 
         response.header('X-Total-Count', count['count(*)']);
 
